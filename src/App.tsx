@@ -42,6 +42,14 @@ const ALL_TYPES = Object.keys({
 });
 
 export default function App() {
+  // Redirect to clean domain if on the long Vercel URL
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 
+        window.location.hostname === 'rate-my-pokemon-hatimthedreams-projects.vercel.app') {
+      window.location.replace(`https://ratemypokemon.vercel.app${window.location.pathname}${window.location.hash}`);
+    }
+  }, []);
+
   const [shiny, setShiny] = useState(false);
   const [showMegas, setShowMegas] = useState(true);
   const [q, setQ] = useState('');
