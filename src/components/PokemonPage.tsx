@@ -150,13 +150,16 @@ export function PokemonPage({
                   </div>
                 )}
                 <div className="pt-3 border-t border-[#E0E0E0]">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">Coolness Rating</span>
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-3">
+                    <span className="text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide">Rate This Pokémon</span>
+                    <div className="flex flex-col gap-2">
                       <Stars10 value={myScore || 0} onChange={onRate} />
-                      <span className="text-lg font-bold text-[#2979FF] min-w-[3rem]">
-                        {myScore > 0 ? (myScore * 10).toFixed(2) : '0.00'}
-                      </span>
+                      {myScore > 0 && (
+                        <div className="text-sm">
+                          <span className="font-medium text-[#2C2C2C]">Your rating:</span>{' '}
+                          <span className="font-bold text-[#2979FF]">{myScore}/10</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

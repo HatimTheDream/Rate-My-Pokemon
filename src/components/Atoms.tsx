@@ -20,10 +20,11 @@ export function Star({ filled = false, onClick }: { filled?: boolean; onClick: (
   );
 }
 
-export function Stars10({ value = 0, onChange }: { value: number; onChange: (n: number) => void }) {
+export function Stars10({ value = 0, onChange, disabled = false }: { value: number; onChange: (n: number) => void; disabled?: boolean }) {
   const [hoverValue, setHoverValue] = React.useState<number | null>(null);
   
   const handleKeyDown = (e: React.KeyboardEvent, currentValue: number) => {
+    if (disabled) return;
     if (e.key === 'ArrowRight' && currentValue < 10) {
       e.preventDefault();
       onChange(currentValue + 1);
@@ -49,7 +50,7 @@ export function Stars10({ value = 0, onChange }: { value: number; onChange: (n: 
 
   return (
     <div 
-      className="flex gap-1" 
+      className="flex gap-1.5" 
       role="group"
       aria-label={`Rating: ${value} out of 10 stars`}
       onMouseLeave={() => setHoverValue(null)}
@@ -58,21 +59,23 @@ export function Stars10({ value = 0, onChange }: { value: number; onChange: (n: 
         <button
           key={n}
           type="button"
-          onClick={() => onChange(n)}
-          onMouseEnter={() => setHoverValue(n)}
+          disabled={disabled}
+          onClick={() => !disabled && onChange(n)}
+          onMouseEnter={() => !disabled && setHoverValue(n)}
           onKeyDown={(e) => handleKeyDown(e, n)}
           aria-label={`Rate ${n} out of 10`}
           aria-pressed={n === value}
           className={cls(
-            'w-6 h-6 flex items-center justify-center rounded-md relative transition-all',
+            'w-8 h-8 flex items-center justify-center rounded-md relative transition-all',
             'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2979FF]',
-            'hover:scale-[1.08] active:scale-90',
+            !disabled && 'hover:scale-110 active:scale-95 cursor-pointer',
+            disabled && 'opacity-50 cursor-not-allowed',
             n <= displayValue 
-              ? 'text-[#FFB74D] drop-shadow-[0_0_6px_rgba(255,183,77,0.5)]' 
+              ? 'text-[#FFB74D] drop-shadow-[0_0_8px_rgba(255,183,77,0.6)]' 
               : 'text-[#B0BEC5]'
           )}
         >
-          <span className="text-lg leading-none select-none">★</span>
+          <span className="text-2xl leading-none select-none">★</span>
         </button>
       ))}
     </div>

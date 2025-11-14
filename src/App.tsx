@@ -452,8 +452,16 @@ export default function App() {
         onOpenShop={() => goto('/shop')}
       />
 
-      {/* Top sort bar + Filters button */}
+      {/* Tip Banner */}
       <div className="max-w-6xl mx-auto px-4 pt-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-900 mb-4">
+          <span className="font-semibold">💡 Tip:</span> Click any Pokémon to rate it! Your ratings help build the ultimate coolness ranking.
+          {!user && <span> <a onClick={() => setAuthModalOpen(true)} className="underline cursor-pointer font-semibold">Sign in</a> to save ratings across devices.</span>}
+        </div>
+      </div>
+
+      {/* Top sort bar + Filters button */}
+      <div className="max-w-6xl mx-auto px-4">
         {/* compute active filters count locally */}
         <SortBar
           itemsCount={filtered.length}
@@ -461,6 +469,53 @@ export default function App() {
           onOpenFilters={() => setFiltersOpen(true)}
           onOpenSort={() => setSortOpen(true)}
         />
+        
+        {/* Active Filter Chips */}
+        {(typeSet.size > 0 || genSet.size > 0 || catSet.size > 0) && (
+          <div className="flex flex-wrap gap-2 mt-3 items-center">
+            <span className="text-xs font-semibold text-gray-600 uppercase">Filters:</span>
+            {Array.from(typeSet).map((t) => (
+              <button
+                key={`type-${t}`}
+                onClick={() => toggleType(t)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <span>{t}</span>
+                <span className="text-gray-400 hover:text-gray-600">✕</span>
+              </button>
+            ))}
+            {Array.from(genSet).map((g) => (
+              <button
+                key={`gen-${g}`}
+                onClick={() => toggleGen(g)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <span>Gen {g}</span>
+                <span className="text-gray-400 hover:text-gray-600">✕</span>
+              </button>
+            ))}
+            {Array.from(catSet).map((c) => (
+              <button
+                key={`cat-${c}`}
+                onClick={() => toggleCat(c)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <span className="capitalize">{c}</span>
+                <span className="text-gray-400 hover:text-gray-600">✕</span>
+              </button>
+            ))}
+            <button
+              onClick={() => {
+                setTypeSet(new Set());
+                setGenSet(new Set());
+                setCatSet(new Set());
+              }}
+              className="text-xs text-blue-600 hover:text-blue-800 font-semibold underline ml-2"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
       <div className={cls("max-w-6xl mx-auto px-4 pb-10 grid", 

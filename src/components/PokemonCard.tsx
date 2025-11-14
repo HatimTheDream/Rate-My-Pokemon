@@ -78,23 +78,6 @@ export function PokemonCard({
     return mon.dex;
   }, [mon.dex, mon.flags.mega, mon.evoChain]);
 
-  // Get dynamic color based on score (red -> orange -> yellow -> green)
-  const getRatingColor = (score: number): string => {
-    if (score <= 0) return '#E6F0FF';
-    if (score <= 1) return '#D32F2F'; // Dark red for 0-1
-    if (score <= 2) return '#E53935'; // Red for 1-2
-    if (score <= 3) return '#EF5350'; // Light red for 2-3
-    if (score <= 4) return '#FF5722'; // Deep orange for 3-4
-    if (score <= 5) return '#FF7043'; // Orange-red for 4-5
-    if (score <= 6) return '#FF9800'; // Orange for 5-6
-    if (score <= 7) return '#FFA726'; // Light orange for 6-7
-    if (score <= 8) return '#FFC107'; // Amber for 7-8
-    if (score <= 9) return '#9CCC65'; // Yellow-green for 8-9
-    return '#66BB6A'; // Green for 9-10
-  };
-
-  const barColor = useMemo(() => getRatingColor(myScore), [myScore]);
-
   return (
     <Card 
       onClick={onOpen} 
@@ -187,31 +170,14 @@ export function PokemonCard({
         )}
         <div className={cls("card-footer border-t border-[#E0E0E0] bg-white flex items-center justify-between", compact ? "px-3 py-2" : "px-4 py-3")}>
           <div className="flex items-center gap-2 flex-1">
-            {compact ? (
-              <>
-                <div
-                  className="flex-1 h-2 rounded-full bg-[#F2F6FA] overflow-hidden border border-[#E0E0E0]"
-                  role="progressbar"
-                  aria-label="Your rating"
-                  aria-valuemin={0}
-                  aria-valuemax={10}
-                  aria-valuenow={myScore || 0}
-                >
-                  {myScore > 0 ? (
-                    <div 
-                      className={cls('h-full transition-all duration-300', `progress-bar-${myScore * 10}`)} 
-                      style={{ backgroundColor: barColor }}
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-[#E6F0FF]/40" />
-                  )}
-                </div>
-                <span className="text-[11px] text-[#2C2C2C] font-medium w-12 text-right">
-                  {myScore > 0 ? `${(myScore * 10).toFixed(2)}` : 'N/A'}
-                </span>
-              </>
+            {myScore > 0 ? (
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg leading-none text-[#FFB74D]">★</span>
+                <span className="text-sm font-semibold text-[#2C2C2C]">{myScore}/10</span>
+                <span className="text-xs text-[#999999]">Your rating</span>
+              </div>
             ) : (
-              <Stars10 value={myScore} onChange={() => {}} />
+              <span className="text-xs text-[#999999]">Not rated yet</span>
             )}
           </div>
         </div>

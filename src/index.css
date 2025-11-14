@@ -626,7 +626,7 @@ input:focus, select:focus, textarea:focus { outline:none; box-shadow: var(--focu
 .card-hover:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
 
 /* Stronger hover feedback for pokemon card */
-.pokemon-card:hover { transform:scale(1.02); box-shadow:0 4px 8px rgba(0,0,0,0.08); }
+.pokemon-card:hover { transform:scale(1.03); box-shadow:0 6px 16px rgba(0,0,0,0.12); cursor: pointer; }
 .pokemon-card { transition:all .15s ease-in-out; display:flex; flex-direction:column; height:320px; }
 /* Ensure inner sections reserve space to reduce layout shift */
 .pokemon-card .sprite-wrap { height:140px; }
@@ -636,6 +636,9 @@ input:focus, select:focus, textarea:focus { outline:none; box-shadow: var(--focu
 @media (max-width:640px){
   .pokemon-card { height:300px; }
   .pokemon-card .sprite-wrap { height:120px; }
+  /* Increase tap targets on mobile */
+  button, .btn, [role="button"] { min-height: 44px; min-width: 44px; }
+  .filter-chip, .filter-pill, .category-card { min-height: 44px; }
 }
 
 /* Empty / error states styling tweaks */
