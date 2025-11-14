@@ -520,6 +520,26 @@ input:focus, select:focus, textarea:focus { outline:none; box-shadow: var(--focu
 .badge.type-NORMAL { background:rgba(168,168,120,0.85); color:#FFFFFF; }
 .badge.type-default { background:rgba(148,163,184,0.85); color:#FFFFFF; }
 
+/* Type progress bar fills (for profile stats) */
+.type-FIRE { background:linear-gradient(90deg, rgba(240,128,48,0.9), rgba(240,128,48,0.7)); }
+.type-WATER { background:linear-gradient(90deg, rgba(104,144,240,0.9), rgba(104,144,240,0.7)); }
+.type-GRASS { background:linear-gradient(90deg, rgba(120,200,80,0.9), rgba(120,200,80,0.7)); }
+.type-ELECTRIC { background:linear-gradient(90deg, rgba(248,208,48,0.9), rgba(248,208,48,0.7)); }
+.type-ICE { background:linear-gradient(90deg, rgba(152,216,216,0.9), rgba(152,216,216,0.7)); }
+.type-FIGHTING { background:linear-gradient(90deg, rgba(192,48,40,0.9), rgba(192,48,40,0.7)); }
+.type-POISON { background:linear-gradient(90deg, rgba(160,64,160,0.9), rgba(160,64,160,0.7)); }
+.type-GROUND { background:linear-gradient(90deg, rgba(224,192,104,0.9), rgba(224,192,104,0.7)); }
+.type-FLYING { background:linear-gradient(90deg, rgba(168,144,240,0.9), rgba(168,144,240,0.7)); }
+.type-PSYCHIC { background:linear-gradient(90deg, rgba(248,88,136,0.9), rgba(248,88,136,0.7)); }
+.type-BUG { background:linear-gradient(90deg, rgba(168,184,32,0.9), rgba(168,184,32,0.7)); }
+.type-ROCK { background:linear-gradient(90deg, rgba(184,160,56,0.9), rgba(184,160,56,0.7)); }
+.type-GHOST { background:linear-gradient(90deg, rgba(112,88,152,0.9), rgba(112,88,152,0.7)); }
+.type-DARK { background:linear-gradient(90deg, rgba(112,88,72,0.9), rgba(112,88,72,0.7)); }
+.type-DRAGON { background:linear-gradient(90deg, rgba(112,56,248,0.9), rgba(112,56,248,0.7)); }
+.type-STEEL { background:linear-gradient(90deg, rgba(184,184,208,0.9), rgba(184,184,208,0.7)); }
+.type-FAIRY { background:linear-gradient(90deg, rgba(238,153,172,0.9), rgba(238,153,172,0.7)); }
+.type-NORMAL { background:linear-gradient(90deg, rgba(168,168,120,0.9), rgba(168,168,120,0.7)); }
+
 /* Filter chips / pills - UNIFIED ACTIVE STYLE */
 .filter-chip, .filter-pill { display:inline-flex; align-items:center; gap:8px; min-width:108px; justify-content:center; padding:6px 12px; font-size:.8rem; border-radius:999px; background:#FFFFFF; border:1px solid #E0E0E0; color:#2C2C2C; transition:.15s ease; box-shadow:0 2px 4px rgba(0,0,0,0.05); cursor:pointer; height:36px; }
 .filter-chip:hover, .filter-pill:hover { background:var(--bg-muted); }

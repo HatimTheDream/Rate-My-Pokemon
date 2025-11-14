@@ -15,6 +15,7 @@ import { PokemonCard } from './components/PokemonCard';
 import { EmptyState } from './components/EmptyState';
 import { ErrorPanel } from './components/ErrorPanel';
 import { PokemonPage } from './components/PokemonPage';
+import { ProfilePage } from './components/ProfilePage';
 import { AuthModal } from './components/AuthModal';
 import { Pressable } from './components/Atoms';
 import { Pagination } from './components/Pagination';
@@ -377,6 +378,26 @@ export default function App() {
   async function handleSignOut() {
     await signOut();
     setUser(null);
+  }
+
+  // Profile route
+  if (route === '/profile') {
+    if (!user || !userProfile) {
+      // Redirect to home if not logged in
+      goto('/');
+      return null;
+    }
+    return (
+      <ProfilePage
+        user={user}
+        userProfile={userProfile}
+        onBack={goHome}
+        onProfileUpdate={(profile) => setUserProfile(profile)}
+        ratings={ratings}
+        mons={mons}
+        goToDex={goDex}
+      />
+    );
   }
 
   const routeRe = new RegExp('^\\/pokemon\\/(\\d+)$');
