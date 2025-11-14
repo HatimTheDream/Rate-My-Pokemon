@@ -9,10 +9,15 @@ export interface AuthUser {
 
 // Google-only authentication strategy
 export async function signInWithGoogle(): Promise<void> {
+  // Always use the clean domain for production
+  const redirectUrl = import.meta.env.PROD 
+    ? 'https://ratemypokemon.vercel.app/'
+    : 'http://localhost:5174';
+    
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/`,
+      redirectTo: redirectUrl,
       scopes: 'email profile',
     }
   });
