@@ -9,18 +9,11 @@ export interface AuthUser {
 
 // Google-only authentication strategy
 export async function signInWithGoogle(): Promise<void> {
-  // For development, use the exact localhost URL
-  // For production, use your deployed domain with hash route
-  const redirectUrl = import.meta.env.PROD 
-    ? `${window.location.origin}/#/`
-    : 'http://localhost:5174';
-    
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: redirectUrl,
+      redirectTo: `${window.location.origin}/`,
       scopes: 'email profile',
-      skipBrowserRedirect: false,
     }
   });
   if (error) {
