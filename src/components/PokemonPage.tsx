@@ -154,7 +154,10 @@ export function PokemonPage({
         const megaSet = new Set<number>();
         const existing = new Set<number>(stageIds);
         const dexMap = new Map<number, number>();
-        
+
+        // Hard filter: never allow Mega Meganium (or any other unreleased mega) to appear
+        const forbiddenMegaNames = new Set(['meganium-mega', 'meganium-mega-x', 'meganium-mega-y']);
+
         await Promise.all(
           stageIds.map(async (dex) => {
             try {
@@ -162,7 +165,7 @@ export function PokemonPage({
               if (!r.ok) return;
               const js = await r.json();
               const vars = js.varieties || [];
-              
+
               // Known Pokémon with official Mega Evolutions (with sprites in PokéAPI)
               const validMegaBaseNames = new Set([
                 'venusaur', 'charizard', 'blastoise', 'alakazam', 'gengar', 'kangaskhan',
@@ -175,16 +178,18 @@ export function PokemonPage({
                 'lopunny', 'gallade', 'audino', 'diancie'
                 // Note: Meganium excluded until Z-A releases and sprites become available
               ]);
-              
+
               const baseName = js.name.toLowerCase();
-              
+
               // Only process if this Pokémon can have Mega Evolutions
               if (!validMegaBaseNames.has(baseName)) {
                 return;
               }
-              
+
               for (const v of vars) {
                 const nm = (v?.pokemon?.name || '').toLowerCase();
+                // Hard filter: skip forbidden megas (e.g., Meganium)
+                if (forbiddenMegaNames.has(nm)) continue;
                 // Only include variants with 'mega' in name (but not 'gigantamax' or other false positives)
                 if (nm.includes('mega') && !nm.includes('gmax') && !nm.includes('gigantamax')) {
                   const vid = idFromUrl(v.pokemon.url || '');
@@ -220,7 +225,20 @@ export function PokemonPage({
     };
   }, [levels]);
 
-  const levelsWithMegas = useMemo(() => (megaIds.length ? [...levels, megaIds] : levels), [levels, megaIds]);
+  // Remove duplicate Meganiums in the chain (defensive, in case of API oddities)
+  const levelsWithMegas = useMemo(() => {
+    const seen = new Set<number>();
+    const deduped = levels.map(stage => stage.filter(dex => {
+      if (seen.has(dex)) return false;
+      seen.add(dex);
+      return true;
+    }));
+    if (megaIds.length) {
+      const dedupedMegas = megaIds.filter(dex => !seen.has(dex));
+      if (dedupedMegas.length) deduped.push(dedupedMegas);
+    }
+    return deduped;
+  }, [levels, megaIds]);
 
   return (
     <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)]">
