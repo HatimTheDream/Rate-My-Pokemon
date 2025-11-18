@@ -92,16 +92,16 @@ export function PokemonCard({
           compact ? "pt-2 pb-1.5" : "pt-2 pb-1.5"
         )}>
           <div className="flex items-start justify-between w-full">
-            <div className="flex flex-col gap-0.5 flex-1">
-              <div className="flex items-center gap-1.5">
+            <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
                 {!compact && (
-                  <span className="inline-flex gap-1">
+                  <span className="inline-flex gap-1 flex-shrink-0">
                     <span className="led led-green" />
                     <span className="led led-blue" />
                     <span className="led led-amber" />
                   </span>
                 )}
-                <span className={cls("font-bold", compact ? "text-[11px]" : "text-[13px]")}>{formatName(mon.name)}</span>
+                <span className={cls("font-bold truncate", compact ? "text-[11px]" : "text-[13px]")}>{formatName(mon.name)}</span>
               </div>
               <div className={cls("text-[9px] text-[#999999] flex items-center gap-1.5", !compact && "ml-[44px]")}>
                 <span>Gen {mon.generation}</span>
