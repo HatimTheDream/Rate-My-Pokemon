@@ -265,11 +265,12 @@ function parseEvoLevels(chainRoot: any): number[][] {
   return levels.length ? levels : [[]];
 }
 
-async function fetchMonFromListItem(it: { name: string; url: string }): Promise<Mon> {
-  const p = await fetchJSON<any>(it.url);
-  const dex = p.id as number;
-  const types: string[] = p.types.map((t: any) => t.type.name.toUpperCase());
-  const species = await fetchJSON<any>(p.species.url);
+async function fetchMonFromListItem(it: { name: string; url: string }): Promise<Mon | null> {
+  try {
+    const p = await fetchJSON<any>(it.url);
+    const dex = p.id as number;
+    const types: string[] = p.types.map((t: any) => t.type.name.toUpperCase());
+    const species = await fetchJSON<any>(p.species.url);
   const flavor = (species.flavor_text_entries || []).find((e: any) => e.language.name === "en");
   const pokedex = flavor ? String(flavor.flavor_text).replace(/\s+/g, " ") : "";
   const genKey: string = species.generation?.name || "";
@@ -338,6 +339,10 @@ async function fetchMonFromListItem(it: { name: string; url: string }): Promise<
     weight,
     height,
   } as Mon;
+  } catch (err) {
+    console.warn(`Failed to fetch Pokemon: ${it.name}`, err);
+    return null;
+  }
 }
 
 async function chunkMap<X, Y>(xs: X[], n: number, fn: (x: X) => Promise<Y>): Promise<Y[]> {
@@ -353,7 +358,8 @@ export async function loadNationalDex(signal?: AbortSignal): Promise<Mon[]> {
   const base = await fetchJSON<{ results: { name: string; url: string }[] }>(
     "https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0"
   );
-  return chunkMap(base.results, 12, fetchMonFromListItem);
+  const results = await chunkMap(base.results, 12, fetchMonFromListItem);
+  return results.filter((mon): mon is Mon => mon !== null);
 }
 
 export async function streamNationalDex(onBatch: (batch: Mon[]) => void, signal?: AbortSignal): Promise<void> {
@@ -365,7 +371,10 @@ export async function streamNationalDex(onBatch: (batch: Mon[]) => void, signal?
   for (let i = 0; i < items.length; i += step) {
     if (signal?.aborted) return;
     const slice = items.slice(i, i + step);
-    const part = await Promise.all(slice.map(fetchMonFromListItem));
-    onBatch(part);
+    const results = await Promise.all(slice.map(fetchMonFromListItem));
+    const part = results.filter((mon): mon is Mon => mon !== null);
+    if (part.length > 0) {
+      onBatch(part);
+    }
   }
 }
