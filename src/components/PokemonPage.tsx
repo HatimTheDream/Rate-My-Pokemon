@@ -163,7 +163,7 @@ export function PokemonPage({
               const js = await r.json();
               const vars = js.varieties || [];
               
-              // Known Pokémon with official Mega Evolutions
+              // Known Pokémon with official Mega Evolutions (with sprites in PokéAPI)
               const validMegaBaseNames = new Set([
                 'venusaur', 'charizard', 'blastoise', 'alakazam', 'gengar', 'kangaskhan',
                 'pinsir', 'gyarados', 'aerodactyl', 'mewtwo', 'ampharos', 'scizor',
@@ -172,7 +172,8 @@ export function PokemonPage({
                 'lucario', 'abomasnow', 'beedrill', 'pidgeot', 'slowbro', 'steelix',
                 'sceptile', 'swampert', 'sableye', 'sharpedo', 'camerupt', 'altaria',
                 'glalie', 'salamence', 'metagross', 'latias', 'latios', 'rayquaza',
-                'lopunny', 'gallade', 'audino', 'diancie', 'meganium'
+                'lopunny', 'gallade', 'audino', 'diancie'
+                // Note: Meganium excluded until Z-A releases and sprites become available
               ]);
               
               const baseName = js.name.toLowerCase();
