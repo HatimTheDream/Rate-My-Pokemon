@@ -225,20 +225,39 @@ export function PokemonPage({
     };
   }, [levels]);
 
-  // Remove duplicate Meganiums in the chain (defensive, in case of API oddities)
+  // Merge detected mega IDs into their corresponding evolution stage so
+  // the mega appears alongside its base stage regardless of which mon page
+  // is being viewed.
   const levelsWithMegas = useMemo(() => {
     const seen = new Set<number>();
+    // Deep copy and dedupe original levels
     const deduped = levels.map(stage => stage.filter(dex => {
       if (seen.has(dex)) return false;
       seen.add(dex);
       return true;
-    }));
+    }).slice());
+
     if (megaIds.length) {
-      const dedupedMegas = megaIds.filter(dex => !seen.has(dex));
-      if (dedupedMegas.length) deduped.push(dedupedMegas);
+      for (const mid of megaIds) {
+        // Determine the base dex for this mega
+        const base = megaToDexMap?.get(mid) || levels.flat().filter(i => i < 10000).pop();
+        if (!base) continue;
+        // Find the stage index that contains the base dex
+        const stageIdx = deduped.findIndex(stage => stage.includes(base));
+        if (stageIdx === -1) {
+          // If not found, append as its own final stage
+          if (!deduped.some(s => s.includes(mid))) deduped.push([mid]);
+          continue;
+        }
+        // Insert the mega id into that stage if not already present
+        if (!deduped[stageIdx].includes(mid)) {
+          deduped[stageIdx] = [...deduped[stageIdx], mid];
+        }
+      }
     }
+
     return deduped;
-  }, [levels, megaIds]);
+  }, [levels, megaIds, megaToDexMap]);
 
   return (
     <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)]">
