@@ -11,7 +11,7 @@ function EvoNode({ id, name, go, totalStages, displayDex, isMega, regularStages 
   const fontSize = regularStages <= 2 ? 'text-sm' : 'text-xs';
   
   return (
-    <Pressable as="button" onClick={() => go(id)} className="flex flex-col items-center text-[#2C2C2C] hover:opacity-80 active:scale-95 transition-all focus-visible p-2 rounded flex-1 min-w-0">
+    <Pressable as="button" onClick={() => go(id)} className="flex flex-col items-center text-[#2C2C2C] hover:opacity-80 active:scale-95 transition-all focus-visible p-2 rounded flex-1 min-w-0 border-2 border-red-500">
       <div className="flex items-center justify-center">
         <img src={art} alt={`Dex ${displayDex}`} className={`${spriteSize} object-contain evo-sprite`} style={{ imageRendering: 'pixelated' }} />
       </div>
