@@ -162,6 +162,26 @@ export function PokemonPage({
               if (!r.ok) return;
               const js = await r.json();
               const vars = js.varieties || [];
+              
+              // Known Pokémon with official Mega Evolutions
+              const validMegaBaseNames = new Set([
+                'venusaur', 'charizard', 'blastoise', 'alakazam', 'gengar', 'kangaskhan',
+                'pinsir', 'gyarados', 'aerodactyl', 'mewtwo', 'ampharos', 'scizor',
+                'heracross', 'houndoom', 'tyranitar', 'blaziken', 'gardevoir', 'mawile',
+                'aggron', 'medicham', 'manectric', 'banette', 'absol', 'garchomp',
+                'lucario', 'abomasnow', 'beedrill', 'pidgeot', 'slowbro', 'steelix',
+                'sceptile', 'swampert', 'sableye', 'sharpedo', 'camerupt', 'altaria',
+                'glalie', 'salamence', 'metagross', 'latias', 'latios', 'rayquaza',
+                'lopunny', 'gallade', 'audino', 'diancie'
+              ]);
+              
+              const baseName = js.name.toLowerCase();
+              
+              // Only process if this Pokémon can have Mega Evolutions
+              if (!validMegaBaseNames.has(baseName)) {
+                return;
+              }
+              
               for (const v of vars) {
                 const nm = (v?.pokemon?.name || '').toLowerCase();
                 // Only include variants with 'mega' in name (but not 'gigantamax' or other false positives)
