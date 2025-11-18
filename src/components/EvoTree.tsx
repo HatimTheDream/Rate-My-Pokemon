@@ -10,10 +10,14 @@ function EvoNode({ id, name, go, totalStages, displayDex, isMega, regularStages 
   const spriteSize = regularStages === 1 ? 'w-40 h-40' : regularStages === 2 ? 'w-36 h-36' : regularStages === 3 ? 'w-32 h-32' : 'w-28 h-28';
   const fontSize = regularStages <= 2 ? 'text-sm' : 'text-xs';
   
+  // Mega sprites need to be scaled up and positioned higher
+  const megaScale = isMega ? 'scale-125' : '';
+  const megaPosition = isMega ? '-mb-2' : '';
+  
   return (
-    <Pressable as="button" onClick={() => go(id)} className="flex flex-col items-center text-[#2C2C2C] hover:opacity-80 active:scale-95 transition-all focus-visible p-2 rounded flex-1 min-w-0 border-2 border-red-500">
-      <div className="flex items-center justify-center">
-        <img src={art} alt={`Dex ${displayDex}`} className={`${spriteSize} object-contain evo-sprite`} style={{ imageRendering: 'pixelated' }} />
+    <Pressable as="button" onClick={() => go(id)} className="flex flex-col items-center justify-end text-[#2C2C2C] hover:opacity-80 active:scale-95 transition-all focus-visible p-2 pt-1 rounded flex-1 min-w-0 border-2 border-red-500">
+      <div className={`flex items-end justify-center ${megaPosition}`}>
+        <img src={art} alt={`Dex ${displayDex}`} className={`${spriteSize} object-contain object-bottom evo-sprite ${megaScale}`} style={{ imageRendering: 'pixelated' }} />
       </div>
       <div className={`font-semibold text-center truncate max-w-full ${fontSize} mt-1`}>
         {label}
