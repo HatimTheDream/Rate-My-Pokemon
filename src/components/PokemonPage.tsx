@@ -172,7 +172,7 @@ export function PokemonPage({
                 'lucario', 'abomasnow', 'beedrill', 'pidgeot', 'slowbro', 'steelix',
                 'sceptile', 'swampert', 'sableye', 'sharpedo', 'camerupt', 'altaria',
                 'glalie', 'salamence', 'metagross', 'latias', 'latios', 'rayquaza',
-                'lopunny', 'gallade', 'audino', 'diancie'
+                'lopunny', 'gallade', 'audino', 'diancie', 'meganium'
               ]);
               
               const baseName = js.name.toLowerCase();
@@ -182,10 +182,17 @@ export function PokemonPage({
                 return;
               }
               
+              const seenMegaNames = new Set<string>();
+              
               for (const v of vars) {
                 const nm = (v?.pokemon?.name || '').toLowerCase();
                 // Only include variants with 'mega' in name (but not 'gigantamax' or other false positives)
                 if (nm.includes('mega') && !nm.includes('gmax') && !nm.includes('gigantamax')) {
+                  // Skip if we've already seen a mega for this base pokemon (prevents duplicates)
+                  if (seenMegaNames.has(nm)) {
+                    continue;
+                  }
+                  
                   const vid = idFromUrl(v.pokemon.url || '');
                   if (vid && !existing.has(vid)) {
                     // Verify the pokemon actually exists and has sprites
@@ -197,6 +204,7 @@ export function PokemonPage({
                         if (pokemonData.sprites?.front_default) {
                           megaSet.add(vid);
                           dexMap.set(vid, dex); // Map mega ID to base dex number
+                          seenMegaNames.add(nm); // Mark this mega variant as seen
                         }
                       }
                     } catch {
