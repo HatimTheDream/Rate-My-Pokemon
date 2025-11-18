@@ -293,11 +293,17 @@ async function fetchMonFromListItem(it: { name: string; url: string }): Promise<
       evoLevels = parseEvoLevels(evo.chain);
     } catch {}
   
-  // Fetch mega evolutions from varieties if available
+  // Fetch mega evolutions from varieties if available, but only true megas (not base forms, and not unreleased like Meganium)
   const megas: number[] = [];
   if (species.varieties && Array.isArray(species.varieties)) {
     for (const variety of species.varieties) {
-      if (variety.pokemon?.name?.toLowerCase().includes('mega')) {
+      const vname = variety.pokemon?.name?.toLowerCase() || '';
+      // Only allow true megas, not base forms, and never allow Meganium mega (unreleased)
+      if (
+        vname.includes('mega') &&
+        vname !== species.name.toLowerCase() &&
+        !vname.startsWith('meganium-mega')
+      ) {
         try {
           const megaMon = await fetchJSON<any>(variety.pokemon.url);
           if (megaMon.id) megas.push(megaMon.id);
