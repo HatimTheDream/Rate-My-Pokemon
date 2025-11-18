@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Mon, TYPE_COLORS, artUrl, idFromUrl } from '../lib/pokemon';
-import { cls, rangeFilter, formatName } from '../lib/utils';
+import { cls, rangeFilter, formatName, getVariantLabel } from '../lib/utils';
 import { Card, SkeletonBox, SkeletonLines, Stars10, TypeBadge, Pressable } from './Atoms';
 import { PokedexChrome } from './PokedexChrome';
 import { EvoTree } from './EvoTree';
@@ -125,9 +125,20 @@ export function PokemonPage({
               {/* Right: Header + Types + Rating + Pokédex Entry */}
               <div className="flex flex-col gap-4">
                 <div>
-                  <h1 className="text-3xl font-semibold tracking-wide text-[#2C2C2C]">{formatName(mon.name)}</h1>
-                  <div className="text-[#666666] text-sm font-medium mt-1">
-                    #{String(baseDex).padStart(4, '0')} · {mon.region} · Gen {mon.generation}
+                  <div className="flex items-start justify-between gap-4">
+                    <h1 className="text-3xl font-semibold tracking-wide text-[#2C2C2C] flex-1">{formatName(mon.name)}</h1>
+                    <span className="text-[#666666] font-mono text-lg font-medium flex-shrink-0">#{String(baseDex).padStart(4, '0')}</span>
+                  </div>
+                  <div className="text-[#666666] text-sm font-medium mt-1 flex items-center gap-1.5 flex-wrap">
+                    <span className="whitespace-nowrap">Gen {mon.generation}</span>
+                    <span className="text-[#D0D0D0]">•</span>
+                    <span className="capitalize whitespace-nowrap">{mon.region}</span>
+                    {getVariantLabel(mon.name) && (
+                      <>
+                        <span className="text-[#D0D0D0]">•</span>
+                        <span className="text-[#FF6B9D] font-semibold whitespace-nowrap">{getVariantLabel(mon.name)}</span>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-2 flex-wrap">
