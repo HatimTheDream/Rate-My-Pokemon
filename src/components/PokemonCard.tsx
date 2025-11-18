@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Mon, SPRITE, SPRITE_SHINY } from '../lib/pokemon';
-import { cls, formatName } from '../lib/utils';
+import { cls, formatName, getVariantLabel } from '../lib/utils';
 import { Card, SkeletonBox, Stars10, TypeBadge } from './Atoms';
 
 export function PokemonCard({
@@ -107,6 +107,12 @@ export function PokemonCard({
                 <span>Gen {mon.generation}</span>
                 <span className="text-[#D0D0D0]">•</span>
                 <span className="capitalize">{mon.region}</span>
+                {getVariantLabel(mon.name) && (
+                  <>
+                    <span className="text-[#D0D0D0]">•</span>
+                    <span className="text-[#FF6B9D] font-semibold">{getVariantLabel(mon.name)}</span>
+                  </>
+                )}
               </div>
             </div>
             <span className={cls("text-[#666666] font-mono flex-shrink-0 ml-2", compact ? "text-[9px]" : "text-xs")}>#{String(displayDex).padStart(4, '0')}</span>

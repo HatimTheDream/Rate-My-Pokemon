@@ -42,25 +42,19 @@ export function goto(path: string) {
 }
 
 export function formatName(raw: string): string {
-  // Normalize separators then handle known suffix forms (regional, mega)
+  // Normalize separators
   let s = raw.replace(/-/g, ' ');
 
-  // Regional variants: galar|hisui|alola -> " (Galar|Hisui|Alola)"
-  s = s.replace(/\b(galar|hisui|alola)\b/i, (_, r: string) => ` (${r[0].toUpperCase()}${r.slice(1).toLowerCase()})`);
+  // Regional variants: keep in name with capital
+  s = s.replace(/\b(galar|hisui|alola)\b/i, (_, r: string) => `${r[0].toUpperCase()}${r.slice(1).toLowerCase()}`);
 
-  // Mega variants: move 'mega' into parenthetical suffix
+  // Mega variants: clean names - "Charizard X" instead of "Charizard (Mega X)"
   if (/\bmega x\b/i.test(s)) {
-    s = s.replace(/\bmega x\b/i, '').trim();
-    s = s.replace(/\s{2,}/g, ' ');
-    s = s + ' (Mega X)';
+    s = s.replace(/\bmega x\b/i, 'X').trim().replace(/\s{2,}/g, ' ');
   } else if (/\bmega y\b/i.test(s)) {
-    s = s.replace(/\bmega y\b/i, '').trim();
-    s = s.replace(/\s{2,}/g, ' ');
-    s = s + ' (Mega Y)';
+    s = s.replace(/\bmega y\b/i, 'Y').trim().replace(/\s{2,}/g, ' ');
   } else if (/\bmega\b/i.test(s)) {
-    s = s.replace(/\bmega\b/i, '').trim();
-    s = s.replace(/\s{2,}/g, ' ');
-    s = s + ' (Mega)';
+    s = s.replace(/\bmega\b/i, '').trim().replace(/\s{2,}/g, ' ');
   }
 
   // Special case fixes for specific Pokémon names
@@ -71,6 +65,15 @@ export function formatName(raw: string): string {
   const titled = s.replace(/\b\w/g, (c) => c.toUpperCase());
   
   return titled;
+}
+
+export function getVariantLabel(raw: string): string | null {
+  // Extract variant label for display separately (Mega, X, Y, etc.)
+  const lower = raw.toLowerCase();
+  if (lower.includes('mega x')) return 'Mega X';
+  if (lower.includes('mega y')) return 'Mega Y';
+  if (lower.includes('mega')) return 'Mega';
+  return null;
 }
 
 export function rangeFilter(data: { t: number; y: number }[], range: string) {
