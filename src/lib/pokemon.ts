@@ -318,11 +318,13 @@ async function fetchMonFromListItem(it: { name: string; url: string }): Promise<
     evoLevels = [[dex], megas];
   }
   }
+  // Only set mega flag for true mega forms (name includes 'mega' and is not the base species)
+  const isTrueMega = p.name.toLowerCase().includes('mega') && p.name.toLowerCase() !== species.name.toLowerCase();
   const flags: Flags = {
     legendary: !!species.is_legendary,
     mythical: !!species.is_mythical,
     pseudo: PSEUDO_IDS.has(dex),
-    mega: p.name.toLowerCase().includes('mega'),
+    mega: isTrueMega,
   };
   
   // Extract weight (hectograms to kg) and height (decimeters to m)
