@@ -88,7 +88,7 @@ export function PokemonCard({
     >
       <div className="relative flex flex-col h-full">
         <div className={cls(
-          "card-head flex flex-col tracking-wide font-semibold bg-white px-3",
+          "card-head flex flex-col tracking-wide font-semibold bg-white",
           compact ? "pt-2 pb-1.5" : "pt-2 pb-1.5"
         )}>
           <div className="flex items-start justify-between w-full">
