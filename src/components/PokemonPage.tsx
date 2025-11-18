@@ -155,8 +155,10 @@ export function PokemonPage({
         const existing = new Set<number>(stageIds);
         const dexMap = new Map<number, number>();
 
-        // Hard filter: never allow Mega Meganium (or any other unreleased mega) to appear
-        const forbiddenMegaNames = new Set(['meganium-mega', 'meganium-mega-x', 'meganium-mega-y']);
+
+
+
+
 
         await Promise.all(
           stageIds.map(async (dex) => {
@@ -175,8 +177,8 @@ export function PokemonPage({
                 'lucario', 'abomasnow', 'beedrill', 'pidgeot', 'slowbro', 'steelix',
                 'sceptile', 'swampert', 'sableye', 'sharpedo', 'camerupt', 'altaria',
                 'glalie', 'salamence', 'metagross', 'latias', 'latios', 'rayquaza',
-                'lopunny', 'gallade', 'audino', 'diancie'
-                // Note: Meganium excluded until Z-A releases and sprites become available
+                'lopunny', 'gallade', 'audino', 'diancie',
+                'meganium' // Z-A released: add Meganium to valid megas
               ]);
 
               const baseName = js.name.toLowerCase();
@@ -188,8 +190,6 @@ export function PokemonPage({
 
               for (const v of vars) {
                 const nm = (v?.pokemon?.name || '').toLowerCase();
-                // Hard filter: skip forbidden megas (e.g., Meganium)
-                if (forbiddenMegaNames.has(nm)) continue;
                 // Only include variants with 'mega' in name (but not 'gigantamax' or other false positives)
                 if (nm.includes('mega') && !nm.includes('gmax') && !nm.includes('gigantamax')) {
                   const vid = idFromUrl(v.pokemon.url || '');
