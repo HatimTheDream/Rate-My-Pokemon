@@ -60,8 +60,10 @@ export function PokemonPage({
 
     (async () => {
       try {
-        // Fetch the specific pokemon data for this mega evolution
-        const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${mon.dex}`);
+        // Use the pokemon's name to fetch data (works better for megas)
+        const pokemonName = mon.name.toLowerCase().replace(/\s+/g, '-');
+        const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+        
         if (!pokemonRes.ok) {
           if (!cancelled) {
             setPokedexEntry(mon.pokedex);
@@ -94,8 +96,9 @@ export function PokemonPage({
         const speciesData = await speciesRes.json();
         const flavorEntries = speciesData.flavor_text_entries || [];
         
-        // Find English flavor text entry
-        const englishEntry = flavorEntries.find((entry: any) => entry.language.name === 'en');
+        // Find English flavor text entry, preferably from recent games
+        const englishEntries = flavorEntries.filter((entry: any) => entry.language.name === 'en');
+        const englishEntry = englishEntries.length > 0 ? englishEntries[englishEntries.length - 1] : null;
         
         if (englishEntry && !cancelled) {
           const cleanedText = String(englishEntry.flavor_text).replace(/\s+/g, ' ').trim();
@@ -108,6 +111,7 @@ export function PokemonPage({
           setLoadingEntry(false);
         }
       } catch (err) {
+        console.warn('Failed to fetch mega pokedex entry:', err);
         if (!cancelled) {
           setPokedexEntry(mon.pokedex);
           setLoadingEntry(false);
@@ -118,7 +122,7 @@ export function PokemonPage({
     return () => {
       cancelled = true;
     };
-  }, [mon.dex, mon.flags.mega, mon.pokedex]);
+  }, [mon.name, mon.flags.mega, mon.pokedex]);
 
   // Always show mega evolutions for any member in the evo chain
   const [megaIds, setMegaIds] = useState<number[]>([]);
