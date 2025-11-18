@@ -55,6 +55,14 @@ export function PokemonPage({
       return;
     }
 
+    // Hardcoded entries for Mega X/Y variants
+    const megaVariantEntries: Record<string, string> = {
+      'charizard-mega-x': 'The overwhelming power that fills its entire body causes it to turn black and creates intense blue flames.',
+      'charizard-mega-y': 'Its bond with its Trainer is the source of its power. It boasts speed and maneuverability greater than that of a jet fighter.',
+      'mewtwo-mega-x': 'Psychic power has augmented its muscles. It has a grip strength of one ton and can sprint a hundred meters in two seconds flat!',
+      'mewtwo-mega-y': 'Despite its diminished size, its mental power has grown phenomenally. With a mere thought, it can smash a skyscraper to smithereens.',
+    };
+
     let cancelled = false;
     setLoadingEntry(true);
 
@@ -62,6 +70,16 @@ export function PokemonPage({
       try {
         // Use the pokemon's name to fetch data (works better for megas)
         const pokemonName = mon.name.toLowerCase().replace(/\s+/g, '-');
+        
+        // Check if we have a hardcoded entry for this specific variant
+        if (megaVariantEntries[pokemonName]) {
+          if (!cancelled) {
+            setPokedexEntry(megaVariantEntries[pokemonName]);
+            setLoadingEntry(false);
+          }
+          return;
+        }
+        
         const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
         
         if (!pokemonRes.ok) {
