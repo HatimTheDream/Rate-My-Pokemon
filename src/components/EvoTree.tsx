@@ -10,15 +10,12 @@ function EvoNode({ id, name, go, totalStages, displayDex, isMega, regularStages 
   const spriteSize = regularStages === 1 ? 'w-40 h-40' : regularStages === 2 ? 'w-36 h-36' : regularStages === 3 ? 'w-32 h-32' : 'w-28 h-28';
   const fontSize = regularStages <= 2 ? 'text-sm' : 'text-xs';
   
-  // Mega sprites have more whitespace/padding, scale them up slightly and pull text closer
-  const megaScale = isMega ? 'scale-110' : '';
-  
   return (
     <Pressable as="button" onClick={() => go(id)} className="flex flex-col items-center text-[#2C2C2C] hover:opacity-80 active:scale-95 transition-all focus-visible p-2 rounded flex-1 min-w-0">
       <div className="flex items-center justify-center">
-        <img src={art} alt={`Dex ${displayDex}`} className={`${spriteSize} object-contain evo-sprite ${megaScale} ${isMega ? '-translate-y-2' : ''}`} />
+        <img src={art} alt={`Dex ${displayDex}`} className={`${spriteSize} object-contain evo-sprite`} style={{ imageRendering: 'pixelated' }} />
       </div>
-      <div className={`font-semibold text-center truncate max-w-full ${fontSize} ${isMega ? '-mt-1' : 'mt-1'}`}>
+      <div className={`font-semibold text-center truncate max-w-full ${fontSize} mt-1`}>
         {label}
       </div>
       <div className="text-[9px] text-[#666666]">#{String(displayDex).padStart(3, '0')}</div>
