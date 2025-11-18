@@ -281,7 +281,7 @@ export function PokemonPage({
                     <span className="whitespace-nowrap">Gen {mon.generation}</span>
                     <span className="text-[#D0D0D0]">•</span>
                     <span className="capitalize whitespace-nowrap">{mon.region}</span>
-                    {getVariantLabel(mon.name) && (
+                    {mon.flags.mega && getVariantLabel(mon.name) && (
                       <>
                         <span className="text-[#D0D0D0]">•</span>
                         <span className="text-[#FF6B9D] font-semibold whitespace-nowrap">{getVariantLabel(mon.name)}</span>
