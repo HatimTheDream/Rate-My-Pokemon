@@ -164,11 +164,24 @@ export function PokemonPage({
               const vars = js.varieties || [];
               for (const v of vars) {
                 const nm = (v?.pokemon?.name || '').toLowerCase();
-                if (nm.includes('mega')) {
+                // Only include variants with 'mega' in name (but not 'gigantamax' or other false positives)
+                if (nm.includes('mega') && !nm.includes('gmax') && !nm.includes('gigantamax')) {
                   const vid = idFromUrl(v.pokemon.url || '');
                   if (vid && !existing.has(vid)) {
-                    megaSet.add(vid);
-                    dexMap.set(vid, dex); // Map mega ID to base dex number
+                    // Verify the pokemon actually exists and has sprites
+                    try {
+                      const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${nm}`);
+                      if (pokemonRes.ok) {
+                        const pokemonData = await pokemonRes.json();
+                        // Check if it has a front_default sprite
+                        if (pokemonData.sprites?.front_default) {
+                          megaSet.add(vid);
+                          dexMap.set(vid, dex); // Map mega ID to base dex number
+                        }
+                      }
+                    } catch {
+                      // If verification fails, skip this variant
+                    }
                   }
                 }
               }
