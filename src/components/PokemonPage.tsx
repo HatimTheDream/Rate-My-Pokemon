@@ -30,7 +30,9 @@ export function PokemonPage({
   const src = artUrl(mon.dex, shiny, true);
   const head = TYPE_COLORS[mon.types[0]] || '#e11d48';
   const levels = mon.evoLevels || (mon.evoChain.length ? [mon.evoChain] : [[mon.dex]]);
-  const showSkelEntry = !mon.pokedex || mon.pokedex.length < 3;
+  const [pokedexEntry, setPokedexEntry] = useState<string>(mon.pokedex);
+  const [loadingEntry, setLoadingEntry] = useState(false);
+  const showSkelEntry = loadingEntry || !pokedexEntry || pokedexEntry.length < 3;
   const filteredSeries = useMemo(() => rangeFilter(series, range), [series, range]);
   
   // For mega evolutions, find the base dex number from evolution chain
@@ -45,6 +47,78 @@ export function PokemonPage({
       setBaseDex(mon.dex);
     }
   }, [mon.dex, mon.flags.mega, mon.evoChain]);
+
+  // Fetch specific Pokédex entry for mega evolutions
+  useEffect(() => {
+    if (!mon.flags.mega) {
+      setPokedexEntry(mon.pokedex);
+      return;
+    }
+
+    let cancelled = false;
+    setLoadingEntry(true);
+
+    (async () => {
+      try {
+        // Fetch the specific pokemon data for this mega evolution
+        const pokemonRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${mon.dex}`);
+        if (!pokemonRes.ok) {
+          if (!cancelled) {
+            setPokedexEntry(mon.pokedex);
+            setLoadingEntry(false);
+          }
+          return;
+        }
+        
+        const pokemonData = await pokemonRes.json();
+        const speciesUrl = pokemonData.species?.url;
+        
+        if (!speciesUrl) {
+          if (!cancelled) {
+            setPokedexEntry(mon.pokedex);
+            setLoadingEntry(false);
+          }
+          return;
+        }
+
+        // Fetch species data which contains flavor text
+        const speciesRes = await fetch(speciesUrl);
+        if (!speciesRes.ok) {
+          if (!cancelled) {
+            setPokedexEntry(mon.pokedex);
+            setLoadingEntry(false);
+          }
+          return;
+        }
+
+        const speciesData = await speciesRes.json();
+        const flavorEntries = speciesData.flavor_text_entries || [];
+        
+        // Find English flavor text entry
+        const englishEntry = flavorEntries.find((entry: any) => entry.language.name === 'en');
+        
+        if (englishEntry && !cancelled) {
+          const cleanedText = String(englishEntry.flavor_text).replace(/\s+/g, ' ').trim();
+          setPokedexEntry(cleanedText);
+        } else if (!cancelled) {
+          setPokedexEntry(mon.pokedex);
+        }
+        
+        if (!cancelled) {
+          setLoadingEntry(false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setPokedexEntry(mon.pokedex);
+          setLoadingEntry(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [mon.dex, mon.flags.mega, mon.pokedex]);
 
   // Always show mega evolutions for any member in the evo chain
   const [megaIds, setMegaIds] = useState<number[]>([]);
@@ -179,7 +253,7 @@ export function PokemonPage({
                 <div className="mt-2 p-4 bg-[#F2F6FA] rounded-lg border border-[#E0E0E0] flex-1 overflow-hidden">
                   <h2 className="text-xs font-semibold text-[#2C2C2C] uppercase tracking-wide mb-2">Pokédex Entry</h2>
                   <div className="text-[#4F5E6B] text-sm leading-relaxed break-words">
-                    {showSkelEntry ? <SkeletonLines lines={4} /> : mon.pokedex}
+                    {showSkelEntry ? <SkeletonLines lines={4} /> : pokedexEntry}
                   </div>
                 </div>
               </div>
