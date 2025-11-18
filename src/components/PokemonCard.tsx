@@ -88,7 +88,7 @@ export function PokemonCard({
     >
       <div className="relative flex flex-col h-full">
         <div className={cls(
-          "card-head flex flex-col tracking-wide font-semibold bg-white",
+          "card-head flex flex-col tracking-wide font-semibold bg-white px-3",
           compact ? "pt-2 pb-1.5" : "pt-2 pb-1.5"
         )}>
           <div className="flex items-start justify-between w-full">
@@ -103,14 +103,14 @@ export function PokemonCard({
                 )}
                 <span className={cls("font-bold truncate", compact ? "text-[11px]" : "text-[13px]")}>{formatName(mon.name)}</span>
               </div>
-              <div className={cls("text-[9px] text-[#999999] flex items-center gap-1.5", !compact && "ml-[44px]")}>
-                <span>Gen {mon.generation}</span>
+              <div className={cls("text-[9px] text-[#999999] flex items-center gap-1.5 flex-wrap", !compact && "ml-[44px]")}>
+                <span className="whitespace-nowrap">Gen {mon.generation}</span>
                 <span className="text-[#D0D0D0]">•</span>
-                <span className="capitalize">{mon.region}</span>
+                <span className="capitalize whitespace-nowrap">{mon.region}</span>
                 {getVariantLabel(mon.name) && (
                   <>
                     <span className="text-[#D0D0D0]">•</span>
-                    <span className="text-[#FF6B9D] font-semibold">{getVariantLabel(mon.name)}</span>
+                    <span className="text-[#FF6B9D] font-semibold whitespace-nowrap">{getVariantLabel(mon.name)}</span>
                   </>
                 )}
               </div>

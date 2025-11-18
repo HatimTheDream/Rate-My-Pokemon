@@ -472,7 +472,7 @@ export default function App() {
         
         {/* Active Filter Chips */}
         {(typeSet.size > 0 || genSet.size > 0 || catSet.size > 0) && (
-          <div className="flex flex-wrap gap-2 mt-3 items-center">
+          <div className="flex flex-wrap gap-2 mt-3 mb-4 items-center">
             <span className="text-xs font-semibold text-gray-600 uppercase">Filters:</span>
             {Array.from(typeSet).map((t) => (
               <button
