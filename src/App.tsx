@@ -45,7 +45,7 @@ export default function App() {
   // Redirect to clean domain if on the long Vercel URL
   useEffect(() => {
     if (typeof window !== 'undefined' && 
-        window.location.hostname === 'rate-my-pokemon-hatimthedreams-projects.vercel.app') {
+        window.location.hostname.includes('hatimthedreams-projects.vercel.app')) {
       window.location.replace(`https://ratemypokemon.vercel.app${window.location.pathname}${window.location.hash}`);
     }
   }, []);

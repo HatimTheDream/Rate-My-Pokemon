@@ -11,7 +11,7 @@ export interface AuthUser {
 export async function signInWithGoogle(): Promise<void> {
   // Always use the clean domain for production
   const redirectUrl = import.meta.env.PROD 
-    ? 'https://ratemypokemon.vercel.app/'
+    ? 'https://ratemypokemon.vercel.app'
     : 'http://localhost:5174';
     
   const { data, error } = await supabase.auth.signInWithOAuth({
