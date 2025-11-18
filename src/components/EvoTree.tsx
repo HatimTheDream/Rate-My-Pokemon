@@ -3,7 +3,12 @@ import { formatName } from '../lib/utils';
 import { Pressable } from './Atoms';
 
 function EvoNode({ id, name, go, totalStages, displayDex, isMega, regularStages }: { id: number; name: string; go: (dex: number) => void; totalStages: number; displayDex: number; isMega?: boolean; regularStages: number }) {
-  const art = SPRITE_ICON(id);
+  // For regular forms use the icon sprite by id. For megas, some mega
+  // forms don't have official icon sprites in the PokeAPI; use the
+  // Play.PokemonShowdown name-based sprite as a reliable fallback.
+  const cleanedName = String(name).toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const showdownUrl = `https://play.pokemonshowdown.com/sprites/gen5/${cleanedName}.png`;
+  const art = isMega ? showdownUrl : SPRITE_ICON(id);
   const label = formatName(name);
   
   // Size based on evolution line complexity - fewer stages = bigger sprites
