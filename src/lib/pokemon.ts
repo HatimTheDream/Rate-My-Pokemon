@@ -310,10 +310,10 @@ async function fetchMonFromListItem(it: { name: string; url: string }): Promise<
       }
     }
   }
-  // Fallback: some games or API entries may not include the mega as a variety.
-  // Try common candidate names (base-mega, base-mega-x, base-mega-y) and append
-  // any valid results that have sprites.
-  if (megas.length === 0) {
+  // Fallback: only run candidate fetches for a small whitelist to avoid mass 404s
+  // (we only need this for specific recently-added bases like Meganium)
+  const MEGA_FALLBACK_BASES = new Set(['meganium']);
+  if (megas.length === 0 && MEGA_FALLBACK_BASES.has(species.name.toLowerCase())) {
     const base = species.name.toLowerCase();
     const candidates = [`${base}-mega`, `${base}-mega-x`, `${base}-mega-y`];
     for (const cand of candidates) {
@@ -322,7 +322,6 @@ async function fetchMonFromListItem(it: { name: string; url: string }): Promise<
         if (!r.ok) continue;
         const js = await r.json();
         if (js && js.id && js.sprites && js.sprites.front_default) {
-          // Only push if not already present
           if (!megas.includes(js.id)) megas.push(js.id);
         }
       } catch {}
